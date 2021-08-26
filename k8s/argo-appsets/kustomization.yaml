@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: argocd
 resources:
 - poc-appset.yaml
+- infra-appset.yaml
