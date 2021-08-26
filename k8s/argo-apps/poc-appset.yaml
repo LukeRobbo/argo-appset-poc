@@ -20,11 +20,10 @@ spec:
 #              - cluster: prod
 #                url: something.something
   template:
-    syncPolicy:
-      preserveResourcesOnDeletion: true
     metadata:
       name: 'poc-{{cluster}}-{{name}}'
     spec:
+      project: default
       source:
         repoURL: git@github.com:LukeRobbo/argo-appset-poc.git
         targetRevision: HEAD
