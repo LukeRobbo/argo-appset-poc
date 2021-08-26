@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: poc-apps
+spec:
+  generators:
+    - matrix:
+        generators:
+          - git:
+              repoURL: git@github.com:LukeRobbo/argo-appset-poc.git
+              revision: HEAD
+              files:
+                - path: k8s/app/**/settings.yaml
+          - list:
+              elements:
+              - cluster: uat
+                url: https://kubernetes.default.svc
+#              - cluster: staging
+#                url: nonexistent-server.doesnt.exist
+#              - cluster: prod
+#                url: something.something
+  template:
+    syncPolicy:
+      preserveResourcesOnDeletion: true
+    metadata:
+      name: 'poc-{{cluster}}-{{name}}'
+    spec:
+      source:
+        repoURL: git@github.com:LukeRobbo/argo-appset-poc.git
+        targetRevision: HEAD
+        path: '{{path}}/{{cluster}}'
+      destination:
+        server: '{{url}}'
+        namespace: '{{namespace}}'
